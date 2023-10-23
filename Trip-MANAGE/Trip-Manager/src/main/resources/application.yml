@@ -13,7 +13,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL57Dialect # Mysql5.7 버전에 맞는 Hibernate dialect 사용
   servlet:
     multipart:
-      maxFileSize: 20MB         # 파일 한 개당 사이즈
+      maxFileSize: 20MB        # 파일 한 개당 사이즈
       maxRequestSize: 100MB    # 요청당 최대 파일 크기
 
 server:
