@@ -30,10 +30,22 @@ Trip-Manager는 여행을 계획하고 예약하는 데 도움을 주는 플랫�
      npm install
      npm start --port 3001
      ```
-   -사용된 npm 패키지
+   - 사용된 npm 패키지
    ```
-      #styled-compoents : css작성을 보다 용이하게 관리하기 위하여
-      npm install styled-components
+      #emotion/styled : css작성을 보다 용이하게 관리하기 위하여
+      npm install @emotion/react @emotion/styled
+
+      #react-router-dom : 컴포넌트간의 이동을 위한 패키지 설치
+      npm install react-router-dom
+
+      #http-proxy-middleware : 백엔드 서버와 프론트 엔드 서버간의 연결을 위한 미들웨어 프록시 설치
+      npm install http-proxy-middleware
+
+      #axios : 비동기 통신을 위한 패키지 설치
+      npm install axios
+
+      #material : 구글에서 제공하는 css 라이브러리 설치
+      npm install @mui/material @mui/icons-material
    ```  
 
 3. 데이터베이스 설정:
