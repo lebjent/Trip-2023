@@ -16,7 +16,7 @@ function YearSelection(props) {
     <FormControl sx={{ minWidth: 120 }} size="small">
       <InputLabel>출생년도</InputLabel>
       <Select
-        value={year}
+        value={year || ""}
         label="출생년도"
         onChange={onChange}
       >

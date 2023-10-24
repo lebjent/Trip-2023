@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -17,6 +17,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import YearSelection from '../../common/tag/YearSelection';
 import MonthSelection from '../../common/tag/MonthSelection';
 import DaySelection from '../../common/tag/DaySelection';
+import axios from 'axios';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -27,6 +28,21 @@ const LinkTag = styled.span`
 
 export default function EmployeeJoin() {
   
+  const [employeeId,setEmployeeId] = useState('');
+
+  useEffect(()=>{
+    axios.post('/tripManager/getEmployeeId')
+    .then((response) => {
+      console.log('POST 요청 결과:', response);
+      if(response.status === 200){
+        setEmployeeId(response.data);
+      }
+    })
+    .catch((error) => {
+      console.error('POST 요청 실패:', error);
+    });
+    },[employeeId]);
+
   /* 비밀번호 유효성 검사 */
   const [password,setPassword] = useState('');
   const [passwordError,setPasswordError] = useState(false);
@@ -164,6 +180,7 @@ export default function EmployeeJoin() {
         <Box
           sx={{
             marginTop: 8,
+            marginBottom:8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -184,7 +201,7 @@ export default function EmployeeJoin() {
                   fullWidth
                   id="employeeId"
                   label="사번"
-                  defaultValue={'WBTM0001'}
+                  value={employeeId}
                   helperText="사번은 자동으로 배정 됩니다."
                   size="small"
                   InputProps={{
@@ -240,7 +257,7 @@ export default function EmployeeJoin() {
               <FormControl fullWidth size='small'>
                 <InputLabel>성별</InputLabel>
                 <Select
-                  value={gender}
+                  value={gender || ''}
                   label="성별"
                   onChange={handleGenderChange}
                 >
@@ -287,7 +304,7 @@ export default function EmployeeJoin() {
               <FormControl fullWidth size='small'>
                 <InputLabel>담당부서</InputLabel>
                 <Select
-                  value={division}
+                  value={division || ''}
                   label="담당부서"
                   onChange={handleDivisionChange}
                 >

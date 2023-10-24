@@ -17,7 +17,7 @@ function DaySelection(props) {
     <FormControl sx={{ minWidth: 120 }} size="small">
       <InputLabel>일</InputLabel>
       <Select 
-            value={day} 
+            value={day || ""} 
             label="일" 
             onChange={onChange}>
         {daysInMonth.map((day) => (

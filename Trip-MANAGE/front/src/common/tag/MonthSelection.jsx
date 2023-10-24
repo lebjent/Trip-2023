@@ -22,7 +22,7 @@ function MonthSelection(props) {
   return (
     <FormControl sx={{ minWidth: 120 }} size="small">
       <InputLabel>월</InputLabel>
-      <Select value={month} label="월" onChange={onChange}>
+      <Select value={month || ""} label="월" onChange={onChange}>
         {monthOptions.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
