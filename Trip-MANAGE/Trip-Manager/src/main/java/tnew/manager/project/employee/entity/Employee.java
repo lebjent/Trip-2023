@@ -29,6 +29,9 @@ public class Employee extends BaseEntity{
 	
 	@Column(nullable = false, length=3)
 	private String gender; //성별
+
+	@Column(nullable = false, length=3)
+	private String birthDay; //생년월일
 	
 	@Column(nullable = false, length=13)
 	private String phone; //전화번호

@@ -13,7 +13,10 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
-import PasswordTag from '../../tag/PasswordTag';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import YearSelection from '../../common/tag/YearSelection';
+import MonthSelection from '../../common/tag/MonthSelection';
+import DaySelection from '../../common/tag/DaySelection';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -73,6 +76,87 @@ export default function EmployeeJoin() {
       }
   }
 
+  /* 이름 유효성 검사 */
+  const [name,setName] = useState('');
+  const [nameError,setNameError] = useState(false);
+  const [nameMsg,setNameMsg] = useState('');
+
+  const handleNameChange = (e) =>{
+    const newName = e.target.value;
+    const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+
+    setName(newName);
+    if(newName.length > 4 || !korean.test(newName)){
+      setNameError(true);
+      setNameMsg("이름을 다시 확인해주세요.");
+    }else{
+      setNameError(false);
+      setNameMsg('');
+    }
+  }
+
+  /* 성별 */
+  const [gender,setGender] = useState('M');
+  const handleGenderChange = (e) => {
+    console.log(e.target.value);
+    setGender(e.target.value);
+  }
+
+  /* 생년월일 */
+  const [year,setYear] = useState(new Date().getFullYear());
+  const handleChangeYear = (e) => {
+    setYear(e.target.value);
+  }
+
+  const [month,setMonth] = useState(1);
+  const handleChangeMonth = (e) => {
+    setMonth(e.target.value);
+  }
+
+  const [day,setDay] = useState(1);
+  const handleChangeDay = (e) => {
+    setDay(e.target.value);
+  }
+
+  /* 전화번호 */
+  const [phone,setPhone] = useState("");
+  const [phoneError,setPhoneError] = useState(false);
+  const [phoneMsg,setPhoneMsg] = useState("");
+  const handlePhoneChange = (e) => {
+    const newPhone = e.target.value;
+    const regPhone = /^(01[016789]{1})\d{3,4}\d{4}$/;
+    if(!regPhone.test(newPhone)){
+      setPhoneError(true);
+      setPhoneMsg("휴대폰 번호를 다시 한번 확인해주세요.");
+    }else{
+      setPhoneError(false);
+      setPhoneMsg("");
+    }
+    setPhone(newPhone);
+  }
+  /* 이메일 */
+  const [email,setEmail] = useState('');
+  const [emailError,setEmailError] = useState(false);
+  const [emailMsg,setEmailMsg] = useState('');
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    setEmail(newEmail);
+    if(!emailPattern.test(newEmail)){
+      setEmailError(true);
+      setEmailMsg("유효한 이메일 형식이 아닙니다.");
+    }else{
+      setEmailError(false);
+      setEmailMsg("");
+    }
+  } 
+
+  /* 담당부서 */
+  const [division,setDivision] = useState('');
+  const handleDivisionChange = (e) => {
+    setDivision(e.target.value);
+  }
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -111,46 +195,110 @@ export default function EmployeeJoin() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <PasswordTag 
-                    label={'비밀번호'} 
+                <TextField
+                    label='비밀번호' 
                     value={password}
                     error={passwordError}
                     helperText = {passwordMsg}
                     onChange = {handlePasswordChange}
-                    success={passwordSuccess}
+                    color={passwordSuccess}
+                    size='small'
+                    type='password'
+                    autoComplete="new-password"
+                    required
+                    fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
-                <PasswordTag 
-                  label={'비밀번호 확인'}
+                <TextField 
                   value={passwordChk}
                   error={passwordChkError}
                   helperText={passwordChkMsg}
                   onChange={handlePasswordChkChange}
-                  success={passwordChkSuccess}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="passwordCheck"
-                  label="비밀번호 확인"
-                  type="password"
-                  id="passwordCheck"
-                  autoComplete="new-password"
-                  size="small"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="name"
-                  label="이름"
-                  name="name"
+                  color={passwordChkSuccess}
+                  label='비밀번호 확인'
                   size='small'
+                  type='password'
+                  autoComplete="new-password"
+                  required
+                  fullWidth
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  label="이름"
+                  size='small'
+                  onChange={handleNameChange}
+                  error={nameError}
+                  helperText={nameMsg}
+                  value={name}
+                />
+              </Grid>
+              <Grid item xs={12}>
+              <FormControl fullWidth size='small'>
+                <InputLabel>성별</InputLabel>
+                <Select
+                  value={gender}
+                  label="성별"
+                  onChange={handleGenderChange}
+                >
+                  <MenuItem value='M'>남성</MenuItem>
+                  <MenuItem value='F'>여성</MenuItem>
+                </Select>
+              </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                  <YearSelection year={year} onChange={handleChangeYear} />
+              </Grid>
+              <Grid item xs={4}>
+                  <MonthSelection month={month} onChange={handleChangeMonth}  />
+              </Grid>
+              <Grid item xs={4}>
+                  <DaySelection year={year} month={month} day={day} onChange={handleChangeDay} />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  label="전화번호"
+                  size='small'
+                  onChange={handlePhoneChange}
+                  error={phoneError}
+                  helperText={phoneMsg}
+                  value={phone}
+                  placeholder="-를 제외하고 입력해주세요."
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  label="이메일"
+                  size='small'
+                  onChange={handleEmailChange}
+                  error={emailError}
+                  helperText={emailMsg}
+                  value={email}
+                />
+              </Grid>
+              <Grid item xs={12}>
+              <FormControl fullWidth size='small'>
+                <InputLabel>담당부서</InputLabel>
+                <Select
+                  value={division}
+                  label="담당부서"
+                  onChange={handleDivisionChange}
+                >
+                  <MenuItem value='동남아팀'>동남아팀</MenuItem>
+                  <MenuItem value='유럽1팀'>유럽1팀</MenuItem>
+                  <MenuItem value='유럽2팀'>유럽2팀</MenuItem>
+                  <MenuItem value='미주팀'>미주팀</MenuItem>
+                  <MenuItem value='기타지역팀'>기타지역팀</MenuItem>
+                  <MenuItem value='IT팀'>IT팀</MenuItem>
+                </Select>
+              </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
