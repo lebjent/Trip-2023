@@ -1,5 +1,6 @@
 package tnew.manager.project.join.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,4 +30,11 @@ public class JoinService {
 	    return employeeId;
 	}
 	
+	public void employeeJoin(Employee employee,PasswordEncoder passwordEncoder) throws Exception{
+		
+		
+		repository.save(employee);
+		
+	
+	}
 }

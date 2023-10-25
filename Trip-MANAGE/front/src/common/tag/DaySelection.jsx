@@ -21,7 +21,7 @@ function DaySelection(props) {
             label="일" 
             onChange={onChange}>
         {daysInMonth.map((day) => (
-          <MenuItem key={day} value={day}>
+          <MenuItem key={day} value={day < 10 ? `0${day}` : `${day}`}>
             {day+'일'}
           </MenuItem>
         ))}

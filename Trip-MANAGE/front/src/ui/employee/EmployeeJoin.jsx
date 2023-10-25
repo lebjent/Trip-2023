@@ -8,6 +8,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PersonAdd from '@mui/icons-material/PersonAdd';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -18,6 +19,7 @@ import YearSelection from '../../common/tag/YearSelection';
 import MonthSelection from '../../common/tag/MonthSelection';
 import DaySelection from '../../common/tag/DaySelection';
 import axios from 'axios';
+import AlertDialog from '../../common/dialog/AlertDialog';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -25,6 +27,9 @@ const defaultTheme = createTheme();
 const LinkTag = styled.span`
     font-size: 10pt;
 `;
+
+axios.defaults.xsrfCookieName = 'XSRF-TOKEN'; // Spring Boot에서 기본 설정된 이름을 사용
+axios.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
 
 export default function EmployeeJoin() {
   
@@ -67,7 +72,7 @@ export default function EmployeeJoin() {
         }else{
           setPasswordChkError(false);
           setPasswordChkMsg('');
-          setPasswordChkSuccess('success');
+          setPasswordChkSuccess('');
         }
       }
   }
@@ -85,6 +90,7 @@ export default function EmployeeJoin() {
       if(newPasswordChk !== password){
         setPasswordChkError(true);
         setPasswordChkMsg('비밀번호가 일치하지 않습니다.');
+        setPasswordChkSuccess('');
       }else{
         setPasswordChkError(false);
         setPasswordChkMsg('');
@@ -124,12 +130,12 @@ export default function EmployeeJoin() {
     setYear(e.target.value);
   }
 
-  const [month,setMonth] = useState(1);
+  const [month,setMonth] = useState('01');
   const handleChangeMonth = (e) => {
     setMonth(e.target.value);
   }
 
-  const [day,setDay] = useState(1);
+  const [day,setDay] = useState('01');
   const handleChangeDay = (e) => {
     setDay(e.target.value);
   }
@@ -141,19 +147,25 @@ export default function EmployeeJoin() {
   const handlePhoneChange = (e) => {
     const newPhone = e.target.value;
     const regPhone = /^(01[016789]{1})\d{3,4}\d{4}$/;
-    if(!regPhone.test(newPhone)){
+
+    setPhone(newPhone);
+
+    if(newPhone.includes("-")){
+      setPhoneError(true);
+      setPhoneMsg("- 가 포함되어있습니다. 제외하고 입력해주세요.");
+    }else if(!regPhone.test(newPhone)){
       setPhoneError(true);
       setPhoneMsg("휴대폰 번호를 다시 한번 확인해주세요.");
     }else{
       setPhoneError(false);
       setPhoneMsg("");
     }
-    setPhone(newPhone);
   }
   /* 이메일 */
   const [email,setEmail] = useState('');
   const [emailError,setEmailError] = useState(false);
   const [emailMsg,setEmailMsg] = useState('');
+
   const handleEmailChange = (e) => {
     const newEmail = e.target.value;
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -168,9 +180,85 @@ export default function EmployeeJoin() {
   } 
 
   /* 담당부서 */
-  const [division,setDivision] = useState('');
+  const [division,setDivision] = useState("");
   const handleDivisionChange = (e) => {
     setDivision(e.target.value);
+  }
+
+  /* 동의여부 */
+  const [confirm,setConfirm] = useState(false);
+  const handleConfirmClick = (e) => {
+    setConfirm(e.target.checked);
+  }
+
+  /* 모달관련 useState 및 함수 */
+  const [isOpen,setIsOpen] = useState(false);
+  const [msg,setMsg] = useState("");
+  const onClose = () =>{
+    setIsOpen(false);
+  }
+
+  /* 회원가입시 유효성 체크 */
+  const handleEmployeeJoin = (e) =>{
+    e.preventDefault();
+
+    if(passwordError || password.length<=0 || passwordChkError || passwordChk.length <= 0){
+      setIsOpen(true);
+      setMsg("비밀번호를 확인해주세요.");
+      return false;
+    }
+
+    if(nameError || name.length<=0){
+      setIsOpen(true);
+      setMsg("이름이 정확한지 확인해주세요.");
+      return false;
+    }
+
+    if(phoneError || phone.length<=0){
+      setIsOpen(true);
+      setMsg("휴대폰 번호가 정확한지 확인해주세요.");
+      return false;
+    }
+
+
+    if(emailError || email.length<=0){
+      setIsOpen(true);
+      setMsg("이메일 주소 양식이 정확한지 확인해주세요.");
+      return false;
+    }
+
+    if(division === "" || division.length<=0){
+      setIsOpen(true);
+      setMsg("담당부서를 선택해주세요.");
+      return false;
+    }
+
+    if(!confirm){
+      setIsOpen(true);
+      setMsg("회원가입 주의사항을 읽고 동의해주세요.");
+      return false;
+    }
+
+    const data ={
+      'password':password,
+      'name':name,
+      'birthDay':year+"-"+month+"-"+day,
+      'gender':gender,
+      'phone': phone,
+      'email': email,
+      'division':division
+    }
+
+    axios.post('/tripManager/employeeJoin',data)
+    .then((response) => {
+      if(response.status === 200){
+        console.log('POST 요청 결과:', response);
+      }
+    })
+    .catch((error) => {
+      console.error('POST 요청 실패:', error);
+    });
+
   }
 
   return (
@@ -319,7 +407,7 @@ export default function EmployeeJoin() {
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                  control={<Checkbox value={confirm} color="primary" onClick={handleConfirmClick} />}
                   label={
                     <Typography variant="body2" style={{ fontSize: '10pt' }}>
                       회원가입 이후 관리자의 승인이 필요하며 15일이내 승인이 없을시 자동으로 요청이 취소 됩니다.
@@ -329,8 +417,10 @@ export default function EmployeeJoin() {
               </Grid>
             </Grid>
             <Button
-              type="submit"
+              type="button"
+              onClick={handleEmployeeJoin}
               fullWidth
+              startIcon={<PersonAdd />}
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
@@ -347,6 +437,7 @@ export default function EmployeeJoin() {
             </Grid>
           </Box>
         </Box>
+        <AlertDialog isOpen={isOpen} onClose={onClose} msg={msg} />
       </Container>
     </ThemeProvider>
   );
