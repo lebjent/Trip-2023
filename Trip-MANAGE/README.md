@@ -63,6 +63,10 @@ Trip-Manager는 여행을 계획하고 예약하는 데 도움을 주는 플랫�
 
 이 프로젝트에 기여하려면 GitHub 저장소에서 Fork하여 개선 제안 또는 버그 보고서를 제출하세요. 
 
+## 프로젝트 대표 UI화면
 
-
-![Alt text](image.png)
+   #### 메인화면(로그인)
+   ![Alt text](image-1.png)
+   
+   #### 회원가입 화면
+   ![Alt text](image-2.png)
