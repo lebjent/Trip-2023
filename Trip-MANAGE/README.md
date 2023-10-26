@@ -66,7 +66,6 @@ Trip-Manager는 여행을 계획하고 예약하는 데 도움을 주는 플랫�
 ## 프로젝트 대표 UI화면
 
    #### 메인화면(로그인)
-   ![Alt text](image-1.png)
-   
+   ![Alt text](UI-IMAGE/%EB%A9%94%EC%9D%B8%ED%99%94%EB%A9%B4.png)
    #### 회원가입 화면
-   ![Alt text](image-2.png)
+   ![Alt text](UI-IMAGE/%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%ED%99%94%EB%A9%B4.png)

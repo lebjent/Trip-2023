@@ -13,6 +13,15 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
+    private static final String[] PERMIT_URL_ARRAY = {
+            /* swagger v3 */
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            
+            /* 기본적인 */
+            "/tripManager/**"
+    };
+	
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
 		
@@ -20,15 +29,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		 * 개발시 : .csrf().disable().and()  추가 (Swagger API를 사용해서 체크하기 위해)
 		 * 운영시 : .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()  추가
 		*/
-        http
-        .cors().and()
-        .csrf().disable();
-/*      
-		.and()
-		.authorizeRequests()
-        .antMatchers("/public/**").permitAll()
-        .anyRequest().authenticated();; // CSRF 설정
-*/
+		
+    http
+    	.cors().and()
+        .csrf().disable() // CSRF 보안 비활성화
+        .authorizeRequests()
+            .antMatchers(PERMIT_URL_ARRAY).permitAll()
+            .anyRequest().authenticated()
+        .and()    
+        .formLogin()
+            .loginPage("/login")
+            .permitAll()
+        .and()
+        .logout()
+            .permitAll();
     }    
 
 	//스프링에서 제공하는 BCryptPasswordEncoder의 해쉬함수를 사용하여 비밀번호 암호화

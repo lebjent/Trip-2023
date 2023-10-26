@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,11 +9,14 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Login from '@mui/icons-material/Login';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
+import axios from 'axios';
 
+/* 페이지 하단 Copyright 부분 컴포넌트 */
 function Copyright(props) {
   return (
     <Typography variant="body2" color="textSecondary" align="center" {...props}>
@@ -26,23 +29,118 @@ function Copyright(props) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
+/* 
+다크모드 테마 추후 변경 기능추가 에정 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark', // 어두운 테마 설정
+    primary: {
+      main: '#2196F3', // 주요 색상 변경
+    },
+    secondary: {
+      main: '#FF5722', // 보조 색상 변경
+    },
+    background: {
+      default: '#121212', // 배경색 변경
+      paper: '#1E1E1E', // 페이퍼 배경색 변경
+    },
+    text: {
+      primary: '#ffffff', // 텍스트 기본 색상 변경
+      secondary: '#B0BEC5', // 텍스트 보조 색상 변경
+    },
+  },
+  typography: {
+    fontFamily: '"Roboto", sans-serif', // 원하는 글꼴로 변경
+  }
+});
+*/
+/* 회원가입 및 아이디 비밀번호찾기 링크를 설정하기위한 styled 태그 */
 const LinkTag = styled.span`
     font-size: 10pt;
 `;
 
+axios.defaults.xsrfCookieName = 'XSRF-TOKEN'; // Spring Boot에서 기본 설정된 이름을 사용
+axios.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
+
 function LoginPage() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+  //아이디(사원번호)
+  const [employeeId,setEmployeeId] = useState('');
+  const handleChangeId = (e) =>{
+    setEmployeeId(e.target.value);
+    setLoginErrMsg('');
+  };
+  
+  //비밀번호
+  const [password,setPassword] = useState('');
+  const handleChangePassword = (e) =>{
+    setPassword(e.target.value);
+    setLoginErrMsg('');
   };
 
+  //아이디 기억하기 관련
+  const [rememberId, setRememberId] = useState(false); // 아이디 기억하기 상태
+  const handleChangeRememberId = (e) => {
+    setRememberId(e.target.checked);
+  };
+  
+  //로그인시 아이디와 패스워드가 틀릴 경우 메시지
+  const [loginErrMsg,setLoginErrMsg] = useState("");
+
+  //로그인 버튼 클릭시
+  const handleSubmit = (e) =>{
+    e.preventDefault();
+
+    //아이디 또는 비밀번호를 입력하지 않은경우
+    if(employeeId === '' || employeeId.length<=0){
+      setLoginErrMsg('아이디(사원번호)를 입력해주세요.');
+      return false;
+    }
+
+    if(password === '' || password.length <= 0){
+      setLoginErrMsg('비밀번호를 입력해주세요.');
+      return false;
+    }
+
+    // 사용자의 아이디 기억하기 설정을 저장
+    if (rememberId) {
+      localStorage.setItem('rememberedEmployeeId', employeeId);
+    } else {
+      localStorage.removeItem('rememberedEmployeeId');
+    }
+
+    const data = {
+      'employeeId':employeeId,
+      'password':password
+    }
+
+    axios.post('/tripManager/login',data)
+    .then((response) => {
+      console.log('POST 요청 결과:', response);
+      if(response.status === 200){
+        setEmployeeId(response.data);
+      }
+    })
+    .catch((error) => {
+      console.error('POST 요청 실패:', error);
+    });
+
+  }
+
+  
+  useEffect(() => {
+    //저장 되어있는 아이디(사번)이 있는지 체크
+    const rememberedEmployeeId = localStorage.getItem('rememberedEmployeeId');
+    //체크이후 useState에 저장
+    if (rememberedEmployeeId) {
+      setEmployeeId(rememberedEmployeeId);
+      setRememberId(true);
+    }
+  }, []);
+  
+  
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
@@ -56,7 +154,7 @@ function LoginPage() {
             backgroundImage: 'url(img/main/mainImage.jpg)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+              t.palette.mode === 'dark' ? t.palette.grey[50] : t.palette.grey[900],
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
@@ -64,7 +162,7 @@ function LoginPage() {
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
-              my: 8,
+              my: 10,
               mx: 4,
               display: 'flex',
               flexDirection: 'column',
@@ -82,10 +180,12 @@ function LoginPage() {
                 margin="normal"
                 required
                 fullWidth
-                id="employeeID"
+                id="employeeId"
                 label="사번"
-                name="employeeID"
-                autoFocus
+                name="employeeId"
+                value={employeeId}
+                onChange={handleChangeId}
+                //autoFocus 자동 포커스 기pt
               />
               <TextField
                 margin="normal"
@@ -95,16 +195,26 @@ function LoginPage() {
                 label="비밀번호"
                 type="password"
                 id="password"
+                value={password}
+                onChange={handleChangePassword}
                 autoComplete="current-password"
               />
+              <br/>
+              {loginErrMsg && ( // loginErrMsg가 비어 있지 않다면 메시지 표시
+                <Typography variant="body2" color="error" sx={{fontWeight:'bold',fontSize:'9pt'}}>
+                  {loginErrMsg}
+                </Typography>
+              )}
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
+                control={<Checkbox checked={rememberId} color="primary" onChange={handleChangeRememberId} />}
                 label="아이디 기억하기"
               />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
+                size='large'
+                startIcon={<Login />}
                 sx={{ mt: 3, mb: 2 }}
               >
                 로그인

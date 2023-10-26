@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.17'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'tnew.generation.project'
@@ -15,6 +16,8 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	
+	querydsl.extendsFrom compileClasspath
 }
 
 repositories {
@@ -32,8 +35,31 @@ dependencies {
 	
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'//Swagger-API
 	implementation 'org.springframework.boot:spring-boot-starter-security'//SpringSecurity
+	
+	//QueryDsl 의존성 주입
+	implementation 'com.querydsl:querydsl-jpa:5.0.0'
+	implementation 'com.querydsl:querydsl-apt:5.0.0'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+def querydslDir =  "$buildDir/generated/querydsl" //각자 편한경로로 지정하면된다.
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+//gradel clean시에 해당경로의 QClass 디렉토리 삭제
+clean {
+	delete file(querydslDir)
 }
