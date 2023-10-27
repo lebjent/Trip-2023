@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import tnew.manager.project.employee.entity.QEmployee;
 import tnew.manager.project.login.repository.LoginCustomRepository;
 
 public class LoginCustomRepositoryImpl implements LoginCustomRepository {
@@ -17,8 +18,15 @@ public class LoginCustomRepositoryImpl implements LoginCustomRepository {
 	
 	@Override
 	public String loginPermissionConfirm(String employeeId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		
+		QEmployee employee = QEmployee.employee; // Q클래스 사용
+		String confirmResult = null;
+		confirmResult = queryFactory.select(employee.confirm)
+							        .from(employee)
+							        .where(employee.employeeId.eq(employeeId))
+							        .fetchOne();
+		
+		return confirmResult;
 	}
 
 }
