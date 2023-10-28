@@ -2,15 +2,21 @@ package tnew.manager.project.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import lombok.RequiredArgsConstructor;
+import tnew.manager.project.common.handler.LoginFailHandler;
+import tnew.manager.project.login.LoginService;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     private static final String[] PERMIT_URL_ARRAY = {
@@ -22,33 +28,47 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/tripManager/**"
     };
 	
-	@Override
+    private final LoginFailHandler loginFailHandler;
+    
+    private final LoginService loginService;
+    
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
-		
-		/*
-		 * 개발시 : .csrf().disable().and()  추가 (Swagger API를 사용해서 체크하기 위해)
-		 * 운영시 : .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()  추가
-		*/
-		
-    http
-    	.cors().and()
-        .csrf().disable() // CSRF 보안 비활성화
-        .authorizeRequests()
+        http
+            .authorizeRequests()
             .antMatchers(PERMIT_URL_ARRAY).permitAll()
             .anyRequest().authenticated()
-        .and()    
-        .formLogin()
-            .loginPage("/login")
-            .permitAll()
-        .and()
-        .logout()
-            .permitAll();
-    }    
+            .and()
+            .formLogin()
+            .loginPage("/tripManager/login") // 사용자 정의 로그인 페이지 설정
+            .loginProcessingUrl("/tripManager/login") // 로그인 처리 URL 설정
+            .usernameParameter("employeeId") // 로그인시 사용할 파라미터 이름
+            .failureHandler(loginFailHandler) // 로그인 실패 핸들러 설정
+            .and()
+            .logout()
+            .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // 로그아웃 URL 설정
+            .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉트 URL 설정
+            .and()
+            .csrf().disable()
+            .cors()
+            .and()
+            .httpBasic();
+    }
 
+		
+		
 	//스프링에서 제공하는 BCryptPasswordEncoder의 해쉬함수를 사용하여 비밀번호 암호화
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 			return new BCryptPasswordEncoder();
+	}
+	
+	//userDetailService를 구현하고 있는 객체로 memberService를 지정해주며, 비밀번호 암호화를 위해 passwordEncoder를 지정
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+		auth.userDetailsService(loginService)
+			.passwordEncoder(passwordEncoder());
+			
 	}
 	
 }

@@ -116,15 +116,35 @@ function LoginPage() {
       'password':password
     }
 
-    axios.post('/tripManager/login',data)
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }
+    };
+
+    console.log(data);
+
+    axios
+    .post('/tripManager/login', data, config)
     .then((response) => {
       console.log('POST 요청 결과:', response);
-      if(response.status === 200){
-        setEmployeeId(response.data);
+      // 성공한 경우 처리
+      if (response.status === 200) {
+        // 로그인이 성공하면 리다이렉트 또는 다른 동작 수행
       }
     })
     .catch((error) => {
       console.error('POST 요청 실패:', error);
+      if (error.response) {
+        // 서버에서 오류 응답을 보낸 경우
+        const returnCode = error.response.data.returnCode; // 서버에서 정의한 오류 메시지 필드 이름 사용
+        if(returnCode === "NO_ID"){
+          setLoginErrMsg("등록된 아이디가 없습니다.");
+        }
+      } else {
+        // 네트워크 또는 클라이언트 측 오류인 경우
+        setLoginErrMsg('서버와의 통신 중 오류가 발생했습니다.');
+      }
     });
 
   }
@@ -175,7 +195,7 @@ function LoginPage() {
             <Typography component="h2" variant="h5">
               W.B.T.M System 로그인
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -210,12 +230,13 @@ function LoginPage() {
                 label="아이디 기억하기"
               />
               <Button
-                type="submit"
+                type="button"
                 fullWidth
                 variant="contained"
                 size='large'
                 startIcon={<Login />}
                 sx={{ mt: 3, mb: 2 }}
+                onClick={handleSubmit}
               >
                 로그인
               </Button>

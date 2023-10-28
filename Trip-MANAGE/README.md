@@ -47,6 +47,9 @@ Trip-Manager는 여행을 계획하고 예약하는 데 도움을 주는 플랫�
 
       #material : 구글에서 제공하는 css 라이브러리 설치
       npm install @mui/material @mui/icons-material
+
+      #@babel/plugin-proposal-private-property-in-object: Babel은 JavaScript 코드를 변환하고 다양한 환경에서 실행할 수 있도록 도와주는 도구입니다. 이 특정 플러그인은 JavaScript 언어의 최신 기능 중 하나인 "private fields"나 "private methods"을 사용할 수 있도록 해주는 것
+      npm install --save-dev @babel/plugin-proposal-private-property-in-object
    ```  
 
 3. 데이터베이스 설정:
