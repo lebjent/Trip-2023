@@ -12,6 +12,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import lombok.RequiredArgsConstructor;
 import tnew.manager.project.common.handler.LoginFailHandler;
+import tnew.manager.project.common.handler.LoginSuccessHandler;
 import tnew.manager.project.login.LoginService;
 
 @Configuration
@@ -28,6 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/tripManager/**"
     };
 	
+    private final LoginSuccessHandler loginSuccessHandler;
+    
     private final LoginFailHandler loginFailHandler;
     
     private final LoginService loginService;
@@ -40,14 +43,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated()
             .and()
             .formLogin()
-            .loginPage("/tripManager/login") // 사용자 정의 로그인 페이지 설정
             .loginProcessingUrl("/tripManager/login") // 로그인 처리 URL 설정
             .usernameParameter("employeeId") // 로그인시 사용할 파라미터 이름
+            .successHandler(loginSuccessHandler) // 성공 핸들러 등록
             .failureHandler(loginFailHandler) // 로그인 실패 핸들러 설정
+            .permitAll()
             .and()
             .logout()
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // 로그아웃 URL 설정
-            .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉트 URL 설정
+            .permitAll()
             .and()
             .csrf().disable()
             .cors()

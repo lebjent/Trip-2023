@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import styled from '@emotion/styled';
 import LoginPage from './ui/main/LoginPage';
 import EmployeeJoin from './ui/employee/EmployeeJoin';
+import DashBoard from './ui/main/index/DashBoard';
 
 const AppWrapper = styled.div`
   display: flex;
@@ -23,6 +24,7 @@ function App() {
         <Content>
           <Routes>
             <Route path="/" element={<LoginPage />} />
+            <Route path='/dashboard' element={<DashBoard/>} />
             <Route path="/employeeJoin" element={<EmployeeJoin />} />
           </Routes>
         </Content>

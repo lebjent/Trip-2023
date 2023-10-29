@@ -138,9 +138,15 @@ function LoginPage() {
       if (error.response) {
         // 서버에서 오류 응답을 보낸 경우
         const returnCode = error.response.data.returnCode; // 서버에서 정의한 오류 메시지 필드 이름 사용
+        const returnStatus = error.response.status;
+        console.log(error);
         if(returnCode === "NO_ID"){
           setLoginErrMsg("등록된 아이디가 없습니다.");
-        }
+        }else if(returnCode === "NO_CONFIRM"){
+          setLoginErrMsg("회원가입의 승인이 되지않았습니다. 관리자에게 문의해주세요.");
+        }else if(returnStatus === 401){
+          setLoginErrMsg("아이디와 비밀번호를 확인해주세요.");
+        } 
       } else {
         // 네트워크 또는 클라이언트 측 오류인 경우
         setLoginErrMsg('서버와의 통신 중 오류가 발생했습니다.');
