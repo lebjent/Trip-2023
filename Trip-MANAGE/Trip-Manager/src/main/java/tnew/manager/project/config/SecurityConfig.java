@@ -11,9 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import lombok.RequiredArgsConstructor;
+import tnew.manager.project.common.handler.LogOutHandler;
 import tnew.manager.project.common.handler.LoginFailHandler;
 import tnew.manager.project.common.handler.LoginSuccessHandler;
-import tnew.manager.project.login.LoginService;
+import tnew.manager.project.login.service.LoginService;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     private final LoginFailHandler loginFailHandler;
     
+    private final LogOutHandler logOutHandler;
+    
     private final LoginService loginService;
     
     @Override
@@ -50,13 +53,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
             .and()
             .logout()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // 로그아웃 URL 설정
+            .logoutRequestMatcher(new AntPathRequestMatcher("/tripManager/logout")) // 로그아웃 URL 설정
+            .logoutSuccessHandler(logOutHandler)
             .permitAll()
             .and()
             .csrf().disable()
             .cors()
             .and()
-            .httpBasic();
+            .httpBasic()
+            .and()
+            .anonymous().disable(); // 이 부분을 추가하여 익명 사용자를 비활성화
+        
     }
 
 		

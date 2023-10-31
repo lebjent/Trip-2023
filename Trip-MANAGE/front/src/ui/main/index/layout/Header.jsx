@@ -1,10 +1,14 @@
-import React from 'react'
-import { styled, alpha } from '@mui/material/styles';
-import MuiAppBar from '@mui/material/AppBar';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import { IconButton, Menu, MenuItem, Toolbar, Typography, InputBase } from '@mui/material';
+import { IconButton, InputBase, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import MuiAppBar from '@mui/material/AppBar';
+import { alpha, styled } from '@mui/material/styles';
+import axios from 'axios';
+import React, { useState } from 'react';
+
+const loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
+
 
 const drawerWidth = 240;
 
@@ -69,11 +73,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function Header({handleDrawerOpen,open}) {
   
-  const [auth, setAuth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
+  const handleLogout = () => {
+    
+    axios.post('/tripManager/logout')
+    .then((response) => {
+      console.log('POST 요청 결과:', response);
+      if(response.status === 200){
+        // 세션 정보 삭제
+        sessionStorage.removeItem('loginInfo');
+        window.location.href = '/';
+      }
+    })
+    .catch((error) => {
+      console.error('POST 요청 실패:', error);
+    });
   };
 
   const handleMenu = (event) => {
@@ -109,7 +124,6 @@ function Header({handleDrawerOpen,open}) {
               inputProps={{ 'aria-label': 'search' }}
             />
         </Search>
-        {auth && (
           <div>
             <IconButton
               size="large"
@@ -120,6 +134,12 @@ function Header({handleDrawerOpen,open}) {
               color="inherit"
             >
               <AccountCircle />
+                <Typography variant="caption">
+                  {loginInfo.name}
+                </Typography>
+                <Typography variant="caption">
+                  {"/"+loginInfo.division}
+                </Typography>
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -138,10 +158,9 @@ function Header({handleDrawerOpen,open}) {
             >
               <MenuItem onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={handleChange}>로그아웃</MenuItem>
+              <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
             </Menu>
           </div>
-        )}
       </Toolbar>
     </AppBar>
   )

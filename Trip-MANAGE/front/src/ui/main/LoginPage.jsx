@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+import styled from '@emotion/styled';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Login from '@mui/icons-material/Login';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import CssBaseline from '@mui/material/CssBaseline';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
-import styled from '@emotion/styled';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 /* 페이지 하단 Copyright 부분 컴포넌트 */
 function Copyright(props) {
@@ -122,19 +122,30 @@ function LoginPage() {
       }
     };
 
-    console.log(data);
-
     axios
     .post('/tripManager/login', data, config)
     .then((response) => {
-      console.log('POST 요청 결과:', response);
-      // 성공한 경우 처리
       if (response.status === 200) {
-        // 로그인이 성공하면 리다이렉트 또는 다른 동작 수행
+        axios.post('/tripManager/getLoginInfo').then((response)=>{
+          console.log(response);
+          if(response.data.loginStatus === "SUCCESS"){
+            const loginInfo = {
+              "division": response.data.division,
+              "employeeId": response.data.employeeId,
+              "name": response.data.name
+            }
+            sessionStorage.setItem("loginInfo",JSON.stringify(loginInfo));
+            //navigate('/dashboard');
+            window.location.href = '/'
+          }else{
+            setLoginErrMsg("회원정보를 가져오는대 실패하였습니다.");
+          }
+        }).catch((error)=>{
+          setLoginErrMsg("회원정보를 가져오는대 실패하였습니다.");
+        })
       }
     })
     .catch((error) => {
-      console.error('POST 요청 실패:', error);
       if (error.response) {
         // 서버에서 오류 응답을 보낸 경우
         const returnCode = error.response.data.returnCode; // 서버에서 정의한 오류 메시지 필드 이름 사용
@@ -248,7 +259,7 @@ function LoginPage() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link >
+                  <Link to={'/'}>
                     <LinkTag>
                       아이디와 비밀번호를 잃어버리셨습니까?
                     </LinkTag>

@@ -1,15 +1,14 @@
-package tnew.manager.project.login;
+package tnew.manager.project.login.service;
 
 import java.util.Optional;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import tnew.manager.project.common.exception.LoginFailException;
-import tnew.manager.project.employee.dto.EmployeeFormDTO;
+import tnew.manager.project.common.security.EmployeeInfo;
 import tnew.manager.project.employee.entity.Employee;
 import tnew.manager.project.login.repository.LoginRepository;
 
@@ -51,13 +50,14 @@ public class LoginService implements UserDetailsService {
 			
 		}
 		
-        UserDetails userDetails = User
-                .withUsername(employee.get().getEmployeeId())
-                .password(employee.get().getPassword())
-                .roles(employee.get().getDivision())
-                .build();
+		EmployeeInfo employeeInfo = new EmployeeInfo();
 		
-		return userDetails;
+		employeeInfo.setEmployeeId(employee.get().getEmployeeId());
+		employeeInfo.setPassword(employee.get().getPassword());
+		employeeInfo.setName(employee.get().getName());
+		employeeInfo.setDivision(employee.get().getDivision());
+		
+		return employeeInfo;
 	}
 	
 }

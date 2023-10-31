@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import styled from '@emotion/styled';
 import LoginPage from './ui/main/LoginPage';
 import EmployeeJoin from './ui/employee/EmployeeJoin';
@@ -17,15 +17,27 @@ const Content = styled.div`
 
 function App() {
 
+  const loginInfo = JSON.parse(sessionStorage.getItem('loginInfo'));
+
 
   return (
     <BrowserRouter>
       <AppWrapper>
         <Content>
           <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path='/dashboard' element={<DashBoard/>} />
-            <Route path="/employeeJoin" element={<EmployeeJoin />} />
+            <Route
+              path="/"
+              element={loginInfo ? <Navigate to="/dashboard" /> : <LoginPage />}
+            />
+            <Route path="/employeeJoin" element={loginInfo ? <Navigate to="/dashboard" /> : <EmployeeJoin />} />
+            {/* /dashboard 라우트 설정 */}
+            <Route path="/dashboard" element={
+              loginInfo ? (
+                <DashBoard />
+              ) : (
+                <Navigate to="/" state={{ from: '/dashboard' }} />
+              )
+            } />
           </Routes>
         </Content>
       </AppWrapper>
