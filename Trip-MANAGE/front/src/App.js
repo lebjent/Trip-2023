@@ -31,7 +31,7 @@ function App() {
             />
             <Route path="/employeeJoin" element={loginInfo ? <Navigate to="/dashboard" /> : <EmployeeJoin />} />
             {/* /dashboard 라우트 설정 */}
-            <Route path="/dashboard" element={
+            <Route path="/dashboard/*" element={
               loginInfo ? (
                 <DashBoard />
               ) : (

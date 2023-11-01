@@ -14,7 +14,9 @@ import Reservation from '@mui/icons-material/DateRangeOutlined';
 import ProductManage from '@mui/icons-material/ManageSearch';
 import Cancel from '@mui/icons-material/EventBusyOutlined';
 import Review from '@mui/icons-material/PhotoCamera';
+import Place from '@mui/icons-material/Place';
 import { Drawer, List } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -24,6 +26,14 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
   }));
+
+// 스타일드 컴포넌트를 생성하여 Link 컴포넌트를 스타일링
+const StyledLink = styled(Link)`
+  text-decoration: none; /* 밑줄 제거 스타일 */
+  color: black;
+  font-weight: bold;
+  /* 다른 원하는 스타일을 추가할 수 있습니다. */
+`;  
 
 const drawerWidth = 240;
 
@@ -88,7 +98,17 @@ function SideBar({handleDrawerClose,open,theme}) {
                     </ListItemIcon>
                     <ListItemText primary={'항공관리'} />
                 </ListItemButton>
-            </ListItem>       
+            </ListItem>    
+            <StyledLink to={'/dashboard/locationManage'}>
+                <ListItem  disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Place />
+                        </ListItemIcon>
+                        <ListItemText primary={'여행지관리'} />
+                    </ListItemButton>
+                </ListItem>    
+            </StyledLink>
             <ListItem  disablePadding>
                 <ListItemButton>
                     <ListItemIcon>

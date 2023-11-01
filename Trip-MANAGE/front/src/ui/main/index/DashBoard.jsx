@@ -4,6 +4,9 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Header from './layout/Header';
 import SideBar from './layout/SideBar';
+import { Route, Routes } from 'react-router-dom';
+import MainBoard from '../menu/MainBoard';
+import LoactionManage from '../menu/locationManage/LoactionManage';
 
 const drawerWidth = 240;
 
@@ -54,6 +57,10 @@ export default function DashBoard() {
       <SideBar handleDrawerClose={handleDrawerClose} open={open} theme={theme}/>
       <Main open={open}>
         <DrawerHeader />
+        <Routes>
+          <Route exact path="/" element={<MainBoard />} />
+          <Route exact path="/locationManage" element={<LoactionManage />} />
+        </Routes>  
       </Main>
     </Box>
   );

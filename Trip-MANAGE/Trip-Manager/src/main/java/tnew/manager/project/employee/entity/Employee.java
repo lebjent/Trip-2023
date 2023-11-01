@@ -1,9 +1,13 @@
 package tnew.manager.project.employee.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.springframework.data.annotation.CreatedDate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +20,7 @@ import tnew.manager.project.employee.dto.EmployeeFormDTO;
 @ToString
 @Entity
 @Table(name = "employee_tbl")//테이블명
-public class Employee extends BaseEntity{
+public class Employee{
 	
 	@Id
 	@Column(name = "employee_id")//컬럼명
@@ -45,6 +49,20 @@ public class Employee extends BaseEntity{
 	
 	@Column(nullable = false, length = 2)
 	private String confirm; //컴펌여부
+	
+	@CreatedDate
+	@Column(updatable = false)//회원가입일
+	private LocalDateTime joinDate;
+	
+	/* 추후에 규정 정해서 추가로 작업해야함
+	
+	@Column(nullable = false, length = 2)
+	private String rank; //직급
+	
+	@Column(nullable = false, length = 2)
+	private String role; //권한
+	
+	*/
 	
 	public static Employee joinInfo(EmployeeFormDTO dto) {
 		
