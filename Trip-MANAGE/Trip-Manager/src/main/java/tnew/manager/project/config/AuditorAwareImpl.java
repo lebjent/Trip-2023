@@ -22,8 +22,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String employeeId = "";
 		if(authentication != null) {
-			EmployeeInfo employeeInfo = (EmployeeInfo) authentication.getPrincipal();
-			employeeId = employeeInfo.getEmployeeId();
+			employeeId = authentication.getName();
 		}
 		
 		return Optional.of(employeeId);

@@ -50,7 +50,6 @@ public class Employee{
 	@Column(nullable = false, length = 2)
 	private String confirm; //컴펌여부
 	
-	@CreatedDate
 	@Column(updatable = false)//회원가입일
 	private LocalDateTime joinDate;
 	
@@ -77,6 +76,7 @@ public class Employee{
 		employee.setGender(dto.getGender());
 		employee.setDivision(dto.getDivision());
 		employee.setConfirm("N");
+		employee.setJoinDate(LocalDateTime.now());
 		
 		return employee;
 		

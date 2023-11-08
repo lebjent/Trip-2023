@@ -61,10 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .cors()
             .and()
             .httpBasic();
-		/*
-		 * .and() .anonymous().disable();
-		 */ // 이 부분을 추가하여 익명 사용자를 비활성화
-        
     }
 
 		

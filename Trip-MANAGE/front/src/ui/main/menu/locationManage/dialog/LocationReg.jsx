@@ -33,7 +33,6 @@ function LocationReg({ isOpen, handleClose }) {
       .get('/tripManager/getCountyCode')
       .then((response) => {
         // 요청이 성공한 경우
-        console.log('데이터를 가져왔습니다:', response.data);
         setCountries(response.data); // 서버에서 받은 국가 데이터를 상태로 설정
       })
       .catch((error) => {
@@ -51,11 +50,18 @@ function LocationReg({ isOpen, handleClose }) {
 
   /* 도시명 */
   const handleNameChange = (e) => {
-    setName(e.target.value);
+  // 정규 표현식을 사용하여 한글 이외의 문자를 모두 제거
+  const inputValue = e.target.value;
+  setName(inputValue);
   }
+
   /* 공항코드 */
   const handleAcodeChange = (e) => {
-    setAcode(e.target.value);
+    const inputValue = e.target.value.toUpperCase(); // 입력값을 대문자로 변환
+    const filteredValue = inputValue.replace(/[^A-Z]/g, ''); // 대문자 알파벳 외의 문자를 모두 제거
+    const trimmedValue = filteredValue.slice(0, 3); // 처음 세 글자만 유지
+  
+    setAcode(trimmedValue);
   }
 
   const handleLocationReg = (e) => {
@@ -65,32 +71,40 @@ function LocationReg({ isOpen, handleClose }) {
         "acode": acode ,
         "ccode": ccode
     }
-
-    console.log(data);
-
     axios.post('/tripManager/locationReg',data)
     .then((response) => {
-      // 요청이 성공한 경우
-      console.log('데이터를 가져왔습니다:', response.data);
-      setCountries(response.data); // 서버에서 받은 국가 데이터를 상태로 설정
+      if(response.status===200){
+        handleClose();
+        setName('');
+        setAcode('');
+        setCcode('');
+        setSearchTerm('');
+      }
     })
     .catch((error) => {
       console.error('요청 실패:', error);
     });
   }
 
+  const handleResetClose = () =>{
+    handleClose();
+    setName('');
+    setAcode('');
+    setCcode('');
+    setSearchTerm('');
+  }
 
   return (
-    <Dialog open={isOpen} onClose={handleClose}>
+    <Dialog open={isOpen} onClose={handleResetClose}>
       <DialogTitle>여행지 등록</DialogTitle>
       <DialogContent>
-        <Box component="form" noValidate sx={{ mt: 3 }}>
+        <Box component="div" noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                label="도시명"
+                label="도시명(한글입력)"
                 autoFocus
                 size="small"
                 onChange={handleNameChange}
@@ -126,7 +140,7 @@ function LocationReg({ isOpen, handleClose }) {
               <FormControl fullWidth size="small">
                 <InputLabel>국가명</InputLabel>
                 <Select
-                  label="국가명"
+                  label="국가명*"
                   value={ccode}
                   required
                   onChange={(e) => setCcode(e.target.value)}
@@ -143,10 +157,10 @@ function LocationReg({ isOpen, handleClose }) {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button variant="outlined" onClick={handleClose}>
+        <Button variant="outlined" onClick={handleResetClose}>
           취소
         </Button>
-        <Button variant="outlined" onClick={handleLocationReg}>
+        <Button variant="outlined" type='button' onClick={handleLocationReg}>
           등록
         </Button>
       </DialogActions>

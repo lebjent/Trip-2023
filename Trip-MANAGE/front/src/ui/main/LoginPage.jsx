@@ -135,7 +135,6 @@ function LoginPage() {
               "name": response.data.name
             }
             sessionStorage.setItem("loginInfo",JSON.stringify(loginInfo));
-            //navigate('/dashboard');
             window.location.href = '/'
           }else{
             setLoginErrMsg("회원정보를 가져오는대 실패하였습니다.");
