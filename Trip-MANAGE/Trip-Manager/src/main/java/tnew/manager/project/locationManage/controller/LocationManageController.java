@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import tnew.manager.project.code.entity.Country;
 import tnew.manager.project.code.entity.Location;
 import tnew.manager.project.locationManage.dto.LocationFormDTO;
+import tnew.manager.project.locationManage.dto.LocationListSearchDTO;
 import tnew.manager.project.locationManage.service.LocationManageService;
 
 @RestController
@@ -47,10 +48,10 @@ public class LocationManageController {
 	
 	@Operation(summary = "여행지역 리스트", description = "여행지역의 리스트를 가져오는 서비스")
 	@GetMapping(value = {"/getLocationList","/getLocationList/{page}"})
-	public ResponseEntity<?> getLocationList(@PathVariable("page") Optional<Integer> page)throws Exception{
+	public ResponseEntity<?> getLocationList(@PathVariable("page") Optional<Integer> page, LocationListSearchDTO searchDTO)throws Exception{
 		try {
 	        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 5);
-	        Page<Location> reviewList = service.getLocationList(pageable);
+	        Page<Location> reviewList = service.getLocationList(pageable,searchDTO);
 	        return ResponseEntity.ok(reviewList);
 		} catch (Exception e) {
 	        // 예외를 적절하게 처리하여 의미 있는 에러 응답을 반환

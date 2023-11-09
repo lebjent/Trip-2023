@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import tnew.manager.project.code.entity.Location;
+import tnew.manager.project.locationManage.dto.LocationListSearchDTO;
 import tnew.manager.project.locationManage.repository.LocationManageRepository;
 
 @Service
@@ -28,8 +29,8 @@ public class LocationManageService {
 	
 	//여행지역 리스트 불러오기
 	@Transactional(readOnly = true)
-	public Page<Location> getLocationList(Pageable page) throws Exception{
+	public Page<Location> getLocationList(Pageable page, LocationListSearchDTO searchDTO) throws Exception{
 		
-		return locationManageRepository.getLocaitonListPage(page);
+		return locationManageRepository.getLocaitonListPage(page,searchDTO);
 	}
 }
