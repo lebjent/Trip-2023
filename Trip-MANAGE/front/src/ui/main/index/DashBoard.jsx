@@ -7,6 +7,7 @@ import SideBar from './layout/SideBar';
 import { Route, Routes } from 'react-router-dom';
 import MainBoard from '../menu/MainBoard';
 import LoactionManage from '../menu/locationManage/LoactionManage';
+import AirLineManage from '../menu/airLineManage/AirLineManage';
 
 const drawerWidth = 240;
 
@@ -60,6 +61,7 @@ export default function DashBoard() {
         <Routes>
           <Route exact path="/" element={<MainBoard />} />
           <Route exact path="/locationManage" element={<LoactionManage />} />
+          <Route exact path="/airLineManage" element={<AirLineManage />} />
         </Routes>  
       </Main>
     </Box>

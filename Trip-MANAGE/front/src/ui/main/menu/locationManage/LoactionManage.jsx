@@ -1,4 +1,4 @@
-import { Box, FormControl, Grid, InputLabel, MenuItem, Pagination, Paper, Select, Table, TableBody, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Pagination, Paper, Select, Table, TableBody, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import RegisterButton from '../../../../common/tag/RegisterButton';
 import * as formatDate from '../../../../js/formatDate';
 import LocationReg from './dialog/LocationReg';
+import SearchIcon from '@mui/icons-material/Search';
 
 axios.defaults.xsrfCookieName = 'XSRF-TOKEN'; // Spring Boot에서 기본 설정된 이름을 사용
 axios.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
@@ -79,10 +80,17 @@ function LoactionManage() {
       setPage(page-1);
     }
 
+    //여행지 검색
+    const [keyword,setKeyword] = useState('');
+
+    const handleKeywordChange = (e) =>{
+      setKeyword(e.target.value);
+    }
+
     //정렬조건
     const [sort,setSort] = useState('');
     const [sortContent,setSortContent] = useState('');
-
+    
     const handleSortContentChange = (e) =>{
       setSortContent(e.target.value);
     }
@@ -91,12 +99,12 @@ function LoactionManage() {
       setSort(e.target.value);
     }
     
-
       useEffect(()=>{
-        axios.get(`/tripManager/getLocationList/${page}`,{
+        axios.get(`/tripManager/LEVEL0/getLocationList/${page}`,{
           params: {
               'sort': sort,
-              'sortContent': sortContent
+              'sortContent': sortContent,
+              'keyword': keyword
           }
       })
         .then(response => {
@@ -112,21 +120,37 @@ function LoactionManage() {
         .catch(error => {
             alert(error);
         });
-      },[page,isOpen,sort,sortContent]);
+      },[page,isOpen,sort,sortContent,keyword]);
 
 
 
   return (
     <div>
-        <Grid container spacing={0}>
-          <Grid item xs={6}>
+      <Typography variant="h5" sx={{marginBottom:4, color:'#7a7672'}} gutterBottom>
+        여행지관리
+      </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={5}>
             <RegisterButton title={'여행지 등록'} onClick={handleLocationDialogOpen}/>
           </Grid>
-          <Grid item xs={3}>
-            <RegisterButton title={'여행지 등록'} onClick={handleLocationDialogOpen}/>
+          <Grid item xs={4} sm={3}>
+            <TextField
+              id="input-with-icon-textfield"
+              label="여행지 검색"
+              size='small'
+              fullWidth
+              onChange={handleKeywordChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
           </Grid>
-          <Grid item xs={2}>
-            <FormControl sx={{width:120}} size="small">
+          <Grid item xs={3} sm={2}>
+            <FormControl fullWidth size="small">
                 <InputLabel>정렬내용</InputLabel>
                 <Select
                   label="정렬내용"
@@ -141,8 +165,8 @@ function LoactionManage() {
                 </Select>
             </FormControl>     
           </Grid>
-          <Grid item xs={1}>
-            <FormControl sx={{width:120}}  size="small">
+          <Grid item xs={3} sm={2}>
+            <FormControl fullWidth  size="small">
                 <InputLabel>정렬방법</InputLabel>
                 <Select
                   label="정렬방법"

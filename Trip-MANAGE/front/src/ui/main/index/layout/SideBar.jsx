@@ -91,6 +91,7 @@ function SideBar({handleDrawerClose,open,theme}) {
                     <ListItemText primary={'호텔관리'} />
                 </ListItemButton>
             </ListItem>
+            <StyledLink to={'/dashboard/airLineManage'}>
             <ListItem  disablePadding>
                 <ListItemButton>
                     <ListItemIcon>
@@ -99,6 +100,7 @@ function SideBar({handleDrawerClose,open,theme}) {
                     <ListItemText primary={'항공관리'} />
                 </ListItemButton>
             </ListItem>    
+            </StyledLink>
             <StyledLink to={'/dashboard/locationManage'}>
                 <ListItem  disablePadding>
                     <ListItemButton>

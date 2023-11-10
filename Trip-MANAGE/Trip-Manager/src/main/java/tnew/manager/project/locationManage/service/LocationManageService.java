@@ -33,4 +33,21 @@ public class LocationManageService {
 		
 		return locationManageRepository.getLocaitonListPage(page,searchDTO);
 	}
+	
+	//여행지역 중복코드 체크
+	public Boolean acodeDupChk(String acode) throws Exception{
+		
+		Location location = locationManageRepository.findByAcode(acode);
+		Boolean acodeChk = false;
+		
+		if(location != null) {
+			acodeChk = true;
+		}else {
+			acodeChk = false;
+		}
+		
+		return acodeChk;
+		
+	}
+	
 }

@@ -126,22 +126,13 @@ function LoginPage() {
     .post('/tripManager/login', data, config)
     .then((response) => {
       if (response.status === 200) {
-        axios.post('/tripManager/getLoginInfo').then((response)=>{
-          console.log(response);
-          if(response.data.loginStatus === "SUCCESS"){
-            const loginInfo = {
-              "division": response.data.division,
-              "employeeId": response.data.employeeId,
-              "name": response.data.name
-            }
-            sessionStorage.setItem("loginInfo",JSON.stringify(loginInfo));
-            window.location.href = '/'
-          }else{
-            setLoginErrMsg("회원정보를 가져오는대 실패하였습니다.");
-          }
-        }).catch((error)=>{
-          setLoginErrMsg("회원정보를 가져오는대 실패하였습니다.");
-        })
+        const loginInfo = {
+          "division": response.data.division,
+          "employeeId": response.data.employeeId,
+          "name": response.data.name
+        }
+       sessionStorage.setItem("loginInfo",JSON.stringify(loginInfo));
+       window.location.href = '/'
       }
     })
     .catch((error) => {

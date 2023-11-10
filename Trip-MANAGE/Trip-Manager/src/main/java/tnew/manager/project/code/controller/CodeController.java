@@ -22,7 +22,7 @@ public class CodeController {
 	private final CodeService service;
 	
 	@Operation(summary = "국가코드", description = "국가코드를 가져오는 서비스")
-	@GetMapping(value = "/getCountyCode")
+	@GetMapping(value = "/LEVEL0/getCountyCode")
 	public ResponseEntity<?> getCountryCode()throws Exception{
 		try {
 			List<Country> resultList = service.getCountry();

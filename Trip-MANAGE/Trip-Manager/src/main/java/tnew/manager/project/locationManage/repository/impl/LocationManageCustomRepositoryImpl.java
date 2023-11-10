@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -32,24 +33,28 @@ public class LocationManageCustomRepositoryImpl implements LocationManageCustomR
 		
         
 		List<Location> locationList = queryFactory.selectFrom(QLocation.location)
+													.where(searchByLike(searchDTO))
+													.orderBy(getSearchOrder(searchDTO))
 													.offset(pageable.getOffset())
 													.limit(pageable.getPageSize())
-													.orderBy(getSearchOrder(searchDTO))
 													.fetch();
         
         
-		long total = getTotalCount();//총 결과 수			
+		long total = getTotalCount(searchDTO);//총 결과 수			
 		return new PageImpl<>(locationList, pageable, total);
 	}
 	
-    private long getTotalCount() {
+	//쿼리의 결과값을 가져오는 함수
+    private long getTotalCount(LocationListSearchDTO searchDTO) {
     	
         return queryFactory
                 .selectFrom(QLocation.location)
+                .where(searchByLike(searchDTO))
                 .fetch().size();
     }
 	
-    private OrderSpecifier<String> getSearchOrder(LocationListSearchDTO searchDTO) {
+    /*정렬조건*/
+    private OrderSpecifier<?> getSearchOrder(LocationListSearchDTO searchDTO) {
         Optional<String> sort = Optional.ofNullable(searchDTO.getSort());
         Optional<String> sortContent = Optional.ofNullable(searchDTO.getSortContent());
 
@@ -76,7 +81,19 @@ public class LocationManageCustomRepositoryImpl implements LocationManageCustomR
     }
 
 
+    // 키워드로 검색
+    private BooleanExpression searchByLike(LocationListSearchDTO searchDTO) {
+        Optional<String> keyword = Optional.ofNullable(searchDTO.getKeyword());
 
+        if (keyword.isPresent()) {
+        	String keywordValue = keyword.get().toUpperCase(); // 키워드를 소문자로 변환
+            return QLocation.location.name.like("%" + keyword.get() + "%")
+            		.or(QLocation.location.acode.like("%" + keywordValue + "%"));
+        } else {
+            // 키워드가 없는 경우 다른 조건을 추가하거나 null을 반환할 수 있습니다.
+            return null;
+        }
+    }
 
     
 }

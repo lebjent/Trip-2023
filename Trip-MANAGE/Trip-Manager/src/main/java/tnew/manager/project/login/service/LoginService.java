@@ -56,6 +56,7 @@ public class LoginService implements UserDetailsService {
 		employeeInfo.setPassword(employee.get().getPassword());
 		employeeInfo.setName(employee.get().getName());
 		employeeInfo.setDivision(employee.get().getDivision());
+		employeeInfo.setAuthorities(employee.get().getRole());
 		
 		return employeeInfo;
 	}

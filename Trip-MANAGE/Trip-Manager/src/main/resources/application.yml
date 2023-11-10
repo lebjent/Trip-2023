@@ -16,9 +16,12 @@ spring:
       maxFileSize: 20MB        # 파일 한 개당 사이즈
       maxRequestSize: 100MB    # 요청당 최대 파일 크기
 
+
 server:
   port: 8090 # 스프링 부트 애플리케이션의 포트 설정
-  
+  servlet:
+    encoding:
+      charset: UTF-8
   
 # 경로 매칭 전략 설정
 mvc:

@@ -53,15 +53,27 @@ public class Employee{
 	@Column(updatable = false)//회원가입일
 	private LocalDateTime joinDate;
 	
-	/* 추후에 규정 정해서 추가로 작업해야함
-	
-	@Column(nullable = false, length = 2)
+	/*
+	  	사원:A1(회원가입시 기본값)
+	  	대리:B1
+	  	과장:C1
+	  	부장:D1
+	  	차장:E1
+	  	Master:M1
+	 */
+	@Column(nullable = false, length = 5)
 	private String rank; //직급
 	
-	@Column(nullable = false, length = 2)
+	/*
+		권한규칙
+		LEVEL1(기본값)
+		LEVEL2
+		LEVEL3
+		LEVEL4
+	*/
+	@Column(nullable = false, length = 10)
 	private String role; //권한
 	
-	*/
 	
 	public static Employee joinInfo(EmployeeFormDTO dto) {
 		
@@ -77,6 +89,8 @@ public class Employee{
 		employee.setDivision(dto.getDivision());
 		employee.setConfirm("N");
 		employee.setJoinDate(LocalDateTime.now());
+		employee.setRank("A1");
+		employee.setRole("LEVEL1");
 		
 		return employee;
 		

@@ -12,6 +12,6 @@ public class LocationListSearchDTO {
 	
 	public String sort;
 	public String sortContent;
-	
+	public String keyword;
 	
 }

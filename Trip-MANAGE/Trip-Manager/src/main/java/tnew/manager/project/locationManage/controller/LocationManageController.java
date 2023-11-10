@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,7 @@ public class LocationManageController {
 	private final LocationManageService service;
 	
 	@Operation(summary = "여행지역 등록", description = "신규 여행지역을 등록하는 서비스")
-	@PostMapping(value = "/locationReg")
+	@PostMapping(value = "/LEVEL2/locationReg")
 	public ResponseEntity<?> locationReg(@RequestBody LocationFormDTO dto) throws Exception{
 		try {
 			Country country = new Country();
@@ -47,7 +48,7 @@ public class LocationManageController {
 	}
 	
 	@Operation(summary = "여행지역 리스트", description = "여행지역의 리스트를 가져오는 서비스")
-	@GetMapping(value = {"/getLocationList","/getLocationList/{page}"})
+	@GetMapping(value = {"/LEVEL0/getLocationList","/LEVEL0/getLocationList/{page}"})
 	public ResponseEntity<?> getLocationList(@PathVariable("page") Optional<Integer> page, LocationListSearchDTO searchDTO)throws Exception{
 		try {
 	        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 5);
@@ -56,6 +57,17 @@ public class LocationManageController {
 		} catch (Exception e) {
 	        // 예외를 적절하게 처리하여 의미 있는 에러 응답을 반환
 	        return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
+		}
+	}
+	
+	@Operation(summary = "공항코드 중복체크", description = "공항코드를 중복체크")
+	@PostMapping(value = "/LEVEL0/acodeDupChk")
+	public ResponseEntity<?>acodeDupChk(@RequestBody LocationFormDTO dto)throws Exception{
+		try {
+			Boolean acodeChk = service.acodeDupChk(dto.getAcode());
+			return ResponseEntity.ok(acodeChk);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
 		}
 	}
 	
