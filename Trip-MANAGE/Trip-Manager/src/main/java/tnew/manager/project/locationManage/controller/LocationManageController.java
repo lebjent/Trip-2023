@@ -48,7 +48,7 @@ public class LocationManageController {
 	}
 	
 	@Operation(summary = "여행지역 리스트", description = "여행지역의 리스트를 가져오는 서비스")
-	@GetMapping(value = {"/LEVEL0/getLocationList","/LEVEL0/getLocationList/{page}"})
+	@GetMapping(value = {"/LEVEL1/getLocationList","/LEVEL1/getLocationList/{page}"})
 	public ResponseEntity<?> getLocationList(@PathVariable("page") Optional<Integer> page, LocationListSearchDTO searchDTO)throws Exception{
 		try {
 	        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 5);
@@ -61,7 +61,7 @@ public class LocationManageController {
 	}
 	
 	@Operation(summary = "공항코드 중복체크", description = "공항코드를 중복체크")
-	@PostMapping(value = "/LEVEL0/acodeDupChk")
+	@PostMapping(value = "/LEVEL1/acodeDupChk")
 	public ResponseEntity<?>acodeDupChk(@RequestBody LocationFormDTO dto)throws Exception{
 		try {
 			Boolean acodeChk = service.acodeDupChk(dto.getAcode());

@@ -43,7 +43,7 @@ function LocationReg({ isOpen, handleClose }) {
   
   useEffect(() => {
     axios
-      .get('/tripManager/LEVEL0/getCountyCode')
+      .get('/tripManager/LEVEL1/getCountyCode')
       .then((response) => {
         // 요청이 성공한 경우
         setCountries(response.data); // 서버에서 받은 국가 데이터를 상태로 설정
@@ -96,7 +96,7 @@ function LocationReg({ isOpen, handleClose }) {
 
     const param = {"acode":inputValue};
 
-    axios.post("/tripManager/LEVEL0/acodeDupChk",param)
+    axios.post("/tripManager/LEVEL1/acodeDupChk",param)
     .then((response) => {
       if(response.status===200){
         if(response.data){

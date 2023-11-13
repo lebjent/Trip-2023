@@ -31,22 +31,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
     
     //로그인한 회원은 다 사용할수있음
-    private static final String[] PERMIT_URL_ARRAY_LEVEL0 = {
-    		"/tripManager/LEVEL0/**"
-    };
-    
     private static final String[] PERMIT_URL_ARRAY_LEVEL1 = {
+    		"/tripManager/LEVEL1/**"
     };
     
     private static final String[] PERMIT_URL_ARRAY_LEVEL2 = {
-    		/*여행지역등록*/
     		"/tripManager/LEVEL2/**"
     };
 	
     private static final String[] PERMIT_URL_ARRAY_LEVEL3 = {
+    		"/tripManager/LEVEL3/**"
     };
     
     private static final String[] PERMIT_URL_ARRAY_LEVEL4 = {
+    		"/tripManager/LEVEL4/**"
     };
     
     private final LoginSuccessHandler loginSuccessHandler;
@@ -62,8 +60,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
             .antMatchers(PERMIT_URL_ARRAY).permitAll()
-            .antMatchers(PERMIT_URL_ARRAY_LEVEL0).hasAnyRole("LEVEL1","LEVEL2","LEVEL3","LEVEL4") // LEVEL1 권한이 있는 경우만 허용
-            .antMatchers(PERMIT_URL_ARRAY_LEVEL2).hasAnyRole("LEVEL2")
+            .antMatchers(PERMIT_URL_ARRAY_LEVEL1).hasAnyRole("LEVEL1","LEVEL2","LEVEL3","LEVEL4")
+            .antMatchers(PERMIT_URL_ARRAY_LEVEL2).hasAnyRole("LEVEL2","LEVEL3","LEVEL4")
+            .antMatchers(PERMIT_URL_ARRAY_LEVEL3).hasAnyRole("LEVEL3","LEVEL4")
+            .antMatchers(PERMIT_URL_ARRAY_LEVEL2).hasAnyRole("LEVEL4")
             .anyRequest().authenticated()
             .and()
             .formLogin()

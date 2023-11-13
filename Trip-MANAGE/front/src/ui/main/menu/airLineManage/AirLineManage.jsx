@@ -1,9 +1,31 @@
 import { FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import RegisterButton from '../../../../common/tag/RegisterButton'
 import SearchIcon from '@mui/icons-material/Search';
+import AirLineReg from './dialog/AirLineReg';
+import AirPlaneReg from './dialog/AirPlaneReg';
 
 function AirLineManage() {
+
+  /* 항공사 등록 Dialog */
+  const [isOpenAirLineReg,setIsOpenAirLineReg] = useState(false);
+  const handleCloseAirLineReg = (e) => {
+    setIsOpenAirLineReg(false);
+  }
+  const handleOpenAirLineReg = (e) => {
+    setIsOpenAirLineReg(true);
+  }
+
+  /* 항공편 등록 Dialog */
+  const [isOpenAirPlaneReg,setIsOpenAirPlaneReg] = useState(false);
+  const handleCloseAirPlaneReg = (e) => {
+    setIsOpenAirPlaneReg(false);
+  }
+
+  const handleOpenAirPlaneReg = (e)=>{
+    setIsOpenAirPlaneReg(true);
+  }
+
   return (
     <div>
       <Typography variant="h5" sx={{marginBottom:4, color:'#7a7672'}} gutterBottom>
@@ -13,17 +35,17 @@ function AirLineManage() {
           <Grid item xs={5}>
             <Grid container spacing={0}>
               <Grid item xs={12} sm={4}>
-                <RegisterButton title={'항공사 등록'} />
+                <RegisterButton title={'항공사 등록'} icon={'airline'} onClick={handleOpenAirLineReg}  />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <RegisterButton title={'항공편 등록'} />
+                <RegisterButton title={'항공편 등록'} icon={'airplane'} onClick={handleOpenAirPlaneReg} />
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={4} sm={3}>
             <TextField
               id="input-with-icon-textfield"
-              label="여행지 검색"
+              label="항공편 검색"
               size='small'
               fullWidth
               //onChange={handleKeywordChange}
@@ -67,6 +89,8 @@ function AirLineManage() {
             </FormControl>     
           </Grid>
         </Grid>
+        <AirLineReg isOpen={isOpenAirLineReg} handleClose={handleCloseAirLineReg} />
+        <AirPlaneReg isOpen={isOpenAirPlaneReg} handleClose={handleCloseAirPlaneReg} />
     </div>
   )
 }

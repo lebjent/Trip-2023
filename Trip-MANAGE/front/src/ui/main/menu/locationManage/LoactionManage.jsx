@@ -100,7 +100,7 @@ function LoactionManage() {
     }
     
       useEffect(()=>{
-        axios.get(`/tripManager/LEVEL0/getLocationList/${page}`,{
+        axios.get(`/tripManager/LEVEL1/getLocationList/${page}`,{
           params: {
               'sort': sort,
               'sortContent': sortContent,
@@ -131,7 +131,7 @@ function LoactionManage() {
       </Typography>
         <Grid container spacing={2}>
           <Grid item xs={5}>
-            <RegisterButton title={'여행지 등록'} onClick={handleLocationDialogOpen}/>
+            <RegisterButton title={'여행지 등록'} icon={'location'} onClick={handleLocationDialogOpen}/>
           </Grid>
           <Grid item xs={4} sm={3}>
             <TextField
