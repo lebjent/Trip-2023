@@ -111,7 +111,7 @@ function AirLineReg(props) {
     <Dialog open={isOpen} onClose={handleResetClose}>
       <DialogTitle>항공사 등록</DialogTitle>
       <DialogContent>
-        <Box component="div" noValidate sx={{ mt: 3 , width:'300px'}}>
+        <Box component="div" noValidate sx={{ mt: 3 , width:'500px'}}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
                 <TextField

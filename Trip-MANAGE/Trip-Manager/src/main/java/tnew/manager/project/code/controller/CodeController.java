@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import tnew.manager.project.code.dto.AirLinesFormDTO;
 import tnew.manager.project.code.entity.AirLines;
 import tnew.manager.project.code.entity.Country;
+import tnew.manager.project.code.entity.Location;
 import tnew.manager.project.code.service.CodeService;
 
 @RestController
@@ -25,18 +26,29 @@ public class CodeController {
 	
 	private final CodeService service;
 	
-	@Operation(summary = "국가코드", description = "국가코드를 가져오는 서비스")
+	@Operation(summary = "국가코드 가져오기", description = "국가코드를 가져오는 서비스")
 	@GetMapping(value = "/LEVEL1/getCountyCode")
 	public ResponseEntity<?> getCountryCode()throws Exception{
 		try {
-			List<Country> resultList = service.getCountry();
+			List<Country> resultList = service.getCountryCode();
 			return ResponseEntity.ok(resultList);
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
 		}
 	}
 	
-	@Operation(summary = "항공사코드", description = "항공사 코드를 저장하는 서비스")
+	@Operation(summary = "항공사 코드 가져오기",description = "항공사코드를 가져오는 서비스")
+	@GetMapping(value = "/LEVEL1/getAirLinesCode")
+	public ResponseEntity<?> getAirLinesCode()throws Exception{
+		try {
+			List<AirLines> resultList = service.getAirLinesCode();
+			return ResponseEntity.ok(resultList);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
+		}
+	}
+	
+	@Operation(summary = "항공사코드 저장", description = "항공사 코드를 저장하는 서비스")
 	@PostMapping(value = "/LEVEL2/savedAirLines")
 	public ResponseEntity<?> savedAirLines(@RequestBody AirLinesFormDTO dto)throws Exception{
 		
@@ -64,5 +76,15 @@ public class CodeController {
 		
 	}
 	
+	@Operation(summary = "지역코드 가져오기", description = "지역코드를 가져오는 서비스")
+	@GetMapping(value = "/LEVEL1/getLoactionCode")
+	public ResponseEntity<?> getLocationCode()throws Exception{
+		try {
+			List<Location> resultList = service.getLocationCode();
+			return ResponseEntity.ok(resultList);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
+		}
+	}
 	
 }
