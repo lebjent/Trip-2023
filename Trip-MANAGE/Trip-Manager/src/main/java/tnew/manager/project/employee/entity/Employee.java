@@ -7,12 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.springframework.data.annotation.CreatedDate;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import tnew.manager.project.common.entity.BaseEntity;
 import tnew.manager.project.employee.dto.EmployeeFormDTO;
 
 @Getter

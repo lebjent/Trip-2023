@@ -1,4 +1,4 @@
-package tnew.manager.project.code.dto;
+package tnew.manager.project.airLineManage.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

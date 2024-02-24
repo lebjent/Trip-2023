@@ -1,4 +1,4 @@
-package tnew.manager.project.airLineManage.service;
+package tnew.manager.project.airPlaneManage.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import tnew.manager.project.airLineManage.repository.AirPlaneManageRepository;
-import tnew.manager.project.code.entity.AirPlane;
+import tnew.manager.project.airPlaneManage.dto.AirPlaneListSearchDTO;
+import tnew.manager.project.airPlaneManage.entity.AirPlane;
+import tnew.manager.project.airPlaneManage.repository.AirPlaneManageRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +23,8 @@ public class AirPlaneManageService {
 	
 	//항공편 리스트 조회
 	@Transactional(readOnly = true)
-	public Page<AirPlane> getAirPlaneList(Pageable page)throws Exception{
-		return repository.getAirPlaneManageList(page);
+	public Page<AirPlane> getAirPlaneList(Pageable page, AirPlaneListSearchDTO searchDTO)throws Exception{
+		return repository.getAirPlaneManageList(page,searchDTO);
 	}
 	
 }

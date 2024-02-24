@@ -1,4 +1,4 @@
-package tnew.manager.project.code.entity;
+package tnew.manager.project.airLineManage.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import tnew.manager.project.code.dto.AirLinesFormDTO;
+import tnew.manager.project.airLineManage.dto.AirLinesFormDTO;
 import tnew.manager.project.common.entity.BaseEntity;
 
 @Getter

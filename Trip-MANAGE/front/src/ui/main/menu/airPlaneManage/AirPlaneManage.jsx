@@ -1,8 +1,8 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { FormControl, Grid, InputAdornment, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses } from '@mui/material';
-import React, { useState } from 'react';
+import { Box, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Pagination, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import RegisterButton from '../../../../common/tag/RegisterButton';
-import AirLineReg from './dialog/AirLineReg';
+import AirPlaneReg from './dialog/AirPlaneReg';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 
@@ -39,7 +39,13 @@ function TableGrid(props) {
           <TableBody>
               {data.length > 0 ? data.map((item, index) => (
                 <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }} key={index}>
-                </TableRow>
+                <TableCell>{index+1}</TableCell>
+                <TableCell>{item.code}</TableCell>
+                <TableCell>{item.departure.acode+'('+ item.departure.name +')'}</TableCell>
+                <TableCell>{item.arrive.acode+'('+ item.arrive.name +')'}</TableCell>
+                <TableCell>{item.departureTime}</TableCell>
+                <TableCell>{item.arriveTime}</TableCell>
+            </TableRow>
               )) : (
                 <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                   <TableCell colSpan={6} sx={{ textAlign: 'center', fontWeight: 'bold' }}>등록된 항공편이 없습니다.</TableCell>
@@ -51,28 +57,80 @@ function TableGrid(props) {
     );
   }
 
-function AirLineManage() {
+function AirPlaneManage() {
+  
+  /* 테이블리스트 데이터 */
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(1);
 
-  /* 항공사 등록 Dialog */
-  const [isOpenAirLineReg,setIsOpenAirLineReg] = useState(false);
-  const handleCloseAirLineReg = (e) => {
-    setIsOpenAirLineReg(false);
-  }
-  const handleOpenAirLineReg = (e) => {
-    setIsOpenAirLineReg(true);
+  /* 항공편 등록 Dialog */
+  const [isOpenAirPlaneReg,setIsOpenAirPlaneReg] = useState(false);
+  const handleCloseAirPlaneReg = (e) => {
+    setIsOpenAirPlaneReg(false);
   }
 
+  const handleOpenAirPlaneReg = (e)=>{
+    setIsOpenAirPlaneReg(true);
+  }
+  
+  /* 페이지 변경시 */
+  const handlePageChange = (e,page) =>{
+    setPage(page-1);
+  }
+  
+  //항공편명 검색
+  const [keyword,setKeyword] = useState('');
+
+  const handleKeywordChange = (e) =>{
+    setKeyword(e.target.value);
+  }
+
+  //정렬조건
+  const [sort,setSort] = useState('');
+  const [sortContent,setSortContent] = useState('');
+  
+  const handleSortContentChange = (e) =>{
+    setSortContent(e.target.value);
+  }
+
+  const handleSortChange = (e) =>{
+    setSort(e.target.value);
+  }
+
+  useEffect(()=>{
+    axios.get(`/tripManager/LEVEL1/getAirPlaneList/${page}`,{
+      params: {
+        'sort': sort,
+        'sortContent': sortContent,
+        'keyword': keyword
+      }
+  })
+    .then(response => {
+        if (response.status === 200) {
+          setData(response.data.content);
+          if (response.data.totalPages === 0) {
+              setPageSize(1);
+          } else {
+              setPageSize(response.data.totalPages);
+          }
+        }
+    })
+    .catch(error => {
+        alert(error);
+    });
+  },[page,isOpenAirPlaneReg,keyword,sort,sortContent]);
 
   return (
     <div>
       <Typography variant="h5" sx={{marginBottom:4, color:'#7a7672'}} gutterBottom>
-        항공사관리
+        항공편관리
       </Typography>
       <Grid container spacing={2}>
           <Grid item xs={5}>
             <Grid container spacing={0}>
               <Grid item xs={12} sm={4}>
-                <RegisterButton title={'항공사 등록'} icon={'airline'} onClick={handleOpenAirLineReg}  />
+                <RegisterButton title={'항공편 등록'} icon={'airplane'} onClick={handleOpenAirPlaneReg} />
               </Grid>
             </Grid>
           </Grid>
@@ -82,7 +140,7 @@ function AirLineManage() {
               label="항공편 검색"
               size='small'
               fullWidth
-              //onChange={handleKeywordChange}
+              onChange={handleKeywordChange}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -98,13 +156,12 @@ function AirLineManage() {
                 <Select
                   label="정렬내용"
                   required
-                  //value={sortContent}
-                  //onChange={handleSortContentChange}
+                  value={sortContent}
+                  onChange={handleSortContentChange}
                 >
-                  <MenuItem value={'NAME'}>여행지역명</MenuItem>
-                  <MenuItem value={'ACODE'}>공항코드</MenuItem>
-                  <MenuItem value={'CCODE'}>국가명</MenuItem>
-                  <MenuItem value={'REGTIME'}>등록일</MenuItem>
+                  <MenuItem value={'NAME'}>항공편명</MenuItem>
+                  <MenuItem value={'DECODE'}>출발공항 코드명</MenuItem>
+                  <MenuItem value={'ARCODE'}>도착공항 코드명</MenuItem>
                 </Select>
             </FormControl>     
           </Grid>
@@ -114,8 +171,8 @@ function AirLineManage() {
                 <Select
                   label="정렬방법"
                   required
-                  //value={sort}
-                  //onChange={handleSortChange}
+                  value={sort}
+                  onChange={handleSortChange}
                 >
                   <MenuItem value={'ASC'}>오름차순</MenuItem>
                   <MenuItem value={'DESC'}>내림차순</MenuItem>
@@ -123,10 +180,13 @@ function AirLineManage() {
             </FormControl>     
           </Grid>
         </Grid>
-        <TableGrid data={[]} />
-        <AirLineReg isOpen={isOpenAirLineReg} handleClose={handleCloseAirLineReg} />
+        <TableGrid data={data} />
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop:'20px' }}>
+          <Pagination count={pageSize} onChange={handlePageChange} variant="outlined" shape="rounded" />
+        </Box>
+        <AirPlaneReg isOpen={isOpenAirPlaneReg} handleClose={handleCloseAirPlaneReg} />
     </div>
   )
 }
 
-export default AirLineManage
+export default AirPlaneManage

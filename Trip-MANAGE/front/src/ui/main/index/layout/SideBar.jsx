@@ -9,6 +9,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Airplane from '@mui/icons-material/AirplanemodeActiveOutlined';
+import AirLine from '@mui/icons-material/AirlinesRounded';
 import Hotel from '@mui/icons-material/Bed';
 import Reservation from '@mui/icons-material/DateRangeOutlined';
 import ProductManage from '@mui/icons-material/ManageSearch';
@@ -91,15 +92,25 @@ function SideBar({handleDrawerClose,open,theme}) {
                     <ListItemText primary={'호텔관리'} />
                 </ListItemButton>
             </ListItem>
-            <StyledLink to={'/dashboard/airLineManage'}>
+            <StyledLink to={'/dashboard/airPlaneManage'}>
             <ListItem  disablePadding>
                 <ListItemButton>
                     <ListItemIcon>
                         <Airplane />
                     </ListItemIcon>
-                    <ListItemText primary={'항공관리'} />
+                    <ListItemText primary={'항공편관리'} />
                 </ListItemButton>
-            </ListItem>    
+            </ListItem>
+            </StyledLink>
+            <StyledLink to={'/dashboard/airLineManage'}>
+            <ListItem  disablePadding>
+                <ListItemButton>
+                    <ListItemIcon>
+                        <AirLine />
+                    </ListItemIcon>
+                    <ListItemText primary={'항공사관리'} />
+                </ListItemButton>
+            </ListItem> 
             </StyledLink>
             <StyledLink to={'/dashboard/locationManage'}>
                 <ListItem  disablePadding>

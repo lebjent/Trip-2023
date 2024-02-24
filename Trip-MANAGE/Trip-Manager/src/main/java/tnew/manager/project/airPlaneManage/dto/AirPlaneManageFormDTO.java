@@ -1,6 +1,4 @@
-package tnew.manager.project.airLineManage.dto;
-
-import java.sql.Time;
+package tnew.manager.project.airPlaneManage.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

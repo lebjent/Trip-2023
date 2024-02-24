@@ -1,4 +1,4 @@
-package tnew.manager.project.airLineManage.controller;
+package tnew.manager.project.airPlaneManage.controller;
 
 import java.util.Optional;
 
@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import tnew.manager.project.airLineManage.dto.AirPlaneManageFormDTO;
-import tnew.manager.project.airLineManage.repository.AirPlaneManageRepository;
-import tnew.manager.project.airLineManage.service.AirPlaneManageService;
-import tnew.manager.project.code.entity.AirPlane;
-import tnew.manager.project.code.entity.Location;
+import tnew.manager.project.airPlaneManage.dto.AirPlaneListSearchDTO;
+import tnew.manager.project.airPlaneManage.dto.AirPlaneManageFormDTO;
+import tnew.manager.project.airPlaneManage.entity.AirPlane;
+import tnew.manager.project.airPlaneManage.service.AirPlaneManageService;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,10 +46,10 @@ public class AirPlaneManageController {
 	
 	@Operation(summary = "항공편 리스트", description = "항공편을 조회하는 서비스")
 	@GetMapping(value = {"/LEVEL1/getAirPlaneList","/LEVEL1/getAirPlaneList/{page}"})
-	public ResponseEntity<?>getAirPlaneList(@PathVariable("page") Optional<Integer> page)throws Exception{
+	public ResponseEntity<?>getAirPlaneList(@PathVariable("page") Optional<Integer> page, AirPlaneListSearchDTO searchDTO)throws Exception{
 		try {
 	        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 5);
-	        Page<AirPlane> reviewList = service.getAirPlaneList(pageable);
+	        Page<AirPlane> reviewList = service.getAirPlaneList(pageable,searchDTO);
 			return ResponseEntity.ok(reviewList);
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());

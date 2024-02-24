@@ -1,6 +1,4 @@
-package tnew.manager.project.code.entity;
-
-import java.sql.Time;
+package tnew.manager.project.airPlaneManage.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +10,9 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import tnew.manager.project.airLineManage.dto.AirPlaneManageFormDTO;
+import tnew.manager.project.airLineManage.entity.AirLines;
+import tnew.manager.project.airPlaneManage.dto.AirPlaneManageFormDTO;
+import tnew.manager.project.code.entity.Location;
 
 @Getter
 @Setter

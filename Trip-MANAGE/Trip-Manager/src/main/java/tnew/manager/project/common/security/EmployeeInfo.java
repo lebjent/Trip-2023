@@ -21,8 +21,7 @@ public class EmployeeInfo implements UserDetails {
     private String division;			
     private String password;	// 비밀번호
     private String authorities;	// 권한 목록
-	
-    
+
     /**
     * 해당 유저의 권한 목록
     */
